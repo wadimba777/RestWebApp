@@ -6,16 +6,14 @@ public class Movie {
 
     private int id;
     private String title;
-    private int year;
     private int directorId;
 
     public Movie() {
     }
 
-    public Movie(int id, String title, int year, int directorId) {
+    public Movie(int id, String title, int directorId) {
         this.id = id;
         this.title = title;
-        this.year = year;
         this.directorId = directorId;
     }
 
@@ -35,14 +33,6 @@ public class Movie {
         this.title = title;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public int getDirectorId() {
         return directorId;
     }
@@ -56,12 +46,12 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return id == movie.id && year == movie.year && directorId == movie.directorId && Objects.equals(title, movie.title);
+        return id == movie.id && directorId == movie.directorId && Objects.equals(title, movie.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, year, directorId);
+        return Objects.hash(id, title, directorId);
     }
 
     @Override
@@ -69,7 +59,6 @@ public class Movie {
         return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", year=" + year +
                 ", directorId=" + directorId +
                 '}';
     }
