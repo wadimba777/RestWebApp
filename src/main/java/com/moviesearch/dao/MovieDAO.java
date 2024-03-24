@@ -28,7 +28,7 @@ public class MovieDAO extends AbstractDAO<Movie>{
     @Override
     public List<Movie> getAll() {
         List<Movie> movies = new ArrayList<>();
-        String query = "SELECT id, name FROM movies";
+        String query = "SELECT id, title FROM movies";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
