@@ -61,7 +61,20 @@ public Director getById(int id) {
     return null;
 }
 
-@Override
+    @Override
+    public void update(int id, String newName) {
+        String query = "UPDATE directors SET name = ? WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, newName);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
 public boolean removeById(int id) {
     String query = "DELETE FROM directors WHERE id = ?";
     try (Connection connection = DatabaseConnection.getConnection();

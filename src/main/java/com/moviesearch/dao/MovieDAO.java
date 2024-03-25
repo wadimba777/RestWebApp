@@ -28,7 +28,7 @@ public class MovieDAO extends AbstractDAO<Movie>{
     @Override
     public List<Movie> getAll() {
         List<Movie> movies = new ArrayList<>();
-        String query = "SELECT id, title FROM movies";
+        String query = "SELECT id, title, director_id FROM movies";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -47,7 +47,7 @@ public class MovieDAO extends AbstractDAO<Movie>{
 
     @Override
     public Movie getById(int id) {
-        String query = "SELECT id, name FROM movies WHERE id = ?";
+        String query = "SELECT id, title FROM movies WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
@@ -63,6 +63,19 @@ public class MovieDAO extends AbstractDAO<Movie>{
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public void update(int id, String newTitle) {
+        String query = "UPDATE movies SET title = ? WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, newTitle);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

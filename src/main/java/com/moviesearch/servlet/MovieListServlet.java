@@ -16,14 +16,26 @@ import java.util.List;
 public class MovieListServlet extends HttpServlet {
     private MovieDAO movieDAO;
 
+    @Override
     public void init() {
         movieDAO = new MovieDAO();
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Movie> movies = movieDAO.getAll();
         request.setAttribute("movies", movies);
         RequestDispatcher dispatcher = request.getRequestDispatcher("movies.jsp");
         dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String movieIdToDelete = request.getParameter("id");
+        if (movieIdToDelete != null) {
+            movieDAO.removeById(Integer.parseInt(movieIdToDelete));
+        }
+        response.sendRedirect("movies");
     }
 }
