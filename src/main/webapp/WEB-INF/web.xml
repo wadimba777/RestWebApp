@@ -1,0 +1,47 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+  <servlet>
+    <servlet-name>MovieListServlet</servlet-name>
+    <servlet-class>com.moviesearch.servlet.MovieListServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>DirectorsListServlet</servlet-name>
+    <servlet-class>com.moviesearch.servlet.DirectorsListServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>AddDirectorServlet</servlet-name>
+    <servlet-class>com.moviesearch.servlet.AddDirectorServlet</servlet-class>
+  </servlet>
+  <servlet>
+      <servlet-name>AddMovieServlet</servlet-name>
+      <servlet-class>com.moviesearch.servlet.AddMovieServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>MovieListServlet</servlet-name>
+    <url-pattern>/movies</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DirectorsListServlet</servlet-name>
+    <url-pattern>/directors</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AddDirectorServlet</servlet-name>
+    <url-pattern>/addDirector</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AddMovieServlet</servlet-name>
+    <url-pattern>/addMovie</url-pattern>
+  </servlet-mapping>
+
+</web-app>
