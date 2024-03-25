@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DirectorDAO extends AbstractDAO<Director> {
+
     @Override
     public void add(Director director) {
         String query = "INSERT INTO directors(name) VALUES (?)";

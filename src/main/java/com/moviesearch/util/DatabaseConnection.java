@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static com.moviesearch.util.VariableLoader.PASSWORD;
-import static com.moviesearch.util.VariableLoader.URL;
-import static com.moviesearch.util.VariableLoader.USER;
+
 
 public class DatabaseConnection {
+
+    public static final String URL = "jdbc:postgresql://localhost:5432/movielist_db"; //env.get("DB_URL");
+    public static final String USER = "postgres"; //env.get("DB_USER");
+    public static final String PASSWORD = "y2k" ;//env.get("DB_PASSWORD");
 
     public static Connection getConnection() {
         Connection connection = null;

@@ -24,7 +24,7 @@ import java.util.List;
         }
 
         @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             List<Director> directors = directorDAO.getAll();
             request.setAttribute("directors", directors);
             RequestDispatcher dispatcher = request.getRequestDispatcher("directors.jsp");
