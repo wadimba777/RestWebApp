@@ -29,9 +29,9 @@ public class AddMovieServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Director> directors = null;
+        List<Director> directors;
         try {
             directors = directorDAO.getAll();
         } catch (SQLException e) {
@@ -42,8 +42,8 @@ public class AddMovieServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         String title = request.getParameter("title");
         int directorId = Integer.parseInt(request.getParameter("directorId"));
 

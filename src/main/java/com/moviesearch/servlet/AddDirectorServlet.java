@@ -2,7 +2,6 @@ package com.moviesearch.servlet;
 import com.moviesearch.model.Director;
 import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.util.DatabaseConnection;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,14 +22,14 @@ public class AddDirectorServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         response.sendRedirect("addDirector.jsp");
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         String name = request.getParameter("name");
 
         Director director = new Director();

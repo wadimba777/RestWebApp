@@ -53,7 +53,7 @@ public class MovieDAO implements DAO<Movie> {
     @Override
     public Movie get(int id) throws SQLException {
         Movie movie = null;
-        String query = "SELECT id, title FROM movies WHERE id = ?";
+        String query = "SELECT id, title, director_id FROM movies WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
 
