@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Сервлет для отображения списка фильмов и их удаления.
+ */
 @WebServlet(name = "MovieListServlet", urlPatterns = "/movies")
 public class MovieListServlet extends HttpServlet {
     private transient MovieDAO movieDAO;
@@ -23,6 +26,14 @@ public class MovieListServlet extends HttpServlet {
         movieDAO = new MovieDAO(DatabaseConnection.getConnection());
     }
 
+    /**
+     * Обработчик HTTP GET запроса для отображения списка фильмов.
+     *
+     * @param request  объект HttpServletRequest
+     * @param response объект HttpServletResponse
+     * @throws ServletException если произошла ошибка сервлета
+     * @throws IOException      если произошла ошибка ввода-вывода
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Movie> movies;
@@ -36,9 +47,16 @@ public class MovieListServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    /**
+     * Обработчик HTTP POST запроса для удаления фильма из списка.
+     *
+     * @param request  объект HttpServletRequest
+     * @param response объект HttpServletResponse
+     * @throws ServletException если произошла ошибка сервлета
+     * @throws IOException      если произошла ошибка ввода-вывода
+     */
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String movieIdToDelete = request.getParameter("id");
         if (movieIdToDelete != null) {
             try {

@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "DirectorsListServlet", urlPatterns = "/movies")
+/**
+ * Сервлет для отображения списка режиссеров и их удаления.
+ */
+@WebServlet(name = "DirectorsListServlet", urlPatterns = "/directors")
 public class DirectorsListServlet extends HttpServlet {
     private transient DirectorDAO directorDAO;
 
@@ -23,6 +26,13 @@ public class DirectorsListServlet extends HttpServlet {
         directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
     }
 
+    /**
+     * Обработчик HTTP GET запроса для отображения списка режиссеров.
+     *
+     * @param request  объект HttpServletRequest
+     * @param response объект HttpServletResponse
+     * @throws IOException      если произошла ошибка ввода-вывода
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<Director> directors;
@@ -36,6 +46,12 @@ public class DirectorsListServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Обработчик HTTP POST запроса для удаления режиссера из списка.
+     *
+     * @param request  объект HttpServletRequest
+     * @param response объект HttpServletResponse
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         String directorIdToDelete = request.getParameter("id");

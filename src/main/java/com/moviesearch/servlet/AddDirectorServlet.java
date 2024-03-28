@@ -11,25 +11,44 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 
+/**
+ * Сервлет для добавления режиссера.
+ */
 @WebServlet(name = "AddDirectorServlet", urlPatterns = "/addDirector")
 public class AddDirectorServlet extends HttpServlet {
 
     private transient DirectorDAO directorDAO;
 
+    /**
+     * Инициализирует объект DirectorDAO при запуске сервлета.
+     */
     @Override
     public void init() {
         directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
     }
 
+    /**
+     * Отображает страницу добавления режиссера.
+     *
+     * @param request  запрос
+     * @param response ответ
+     * @throws IOException если произошла ошибка ввода/вывода
+     */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.sendRedirect("addDirector.jsp");
     }
 
+    /**
+     * Обрабатывает запрос на добавление режиссера.
+     *
+     * @param request  запрос
+     * @param response ответ
+     * @throws IOException      если произошла ошибка ввода/вывода
+     * @throws RuntimeException если произошла ошибка выполнения SQL-запроса
+     */
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("name");
 
         Director director = new Director();
