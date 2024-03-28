@@ -60,7 +60,6 @@ class MovieListServletTest {
 
     @Test
     void testDoPost() throws ServletException, IOException, SQLException {
-        // Arrange
         when(request.getParameter("id")).thenReturn("1");
         List<Movie> movies = Arrays.asList(new Movie(1, "Movie 1", 1));
         doReturn(movies).when(movieDAO).getAll();
