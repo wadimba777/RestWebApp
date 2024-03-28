@@ -10,28 +10,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDAO extends AbstractDAO<Movie>{
+public class MovieDAO implements DAO<Movie> {
 
     @Override
-    public void add(Movie movie) {
+    public int add(Movie movie) throws SQLException {
         String query = "INSERT INTO movies(title, director_id) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, movie.getTitle());
             statement.setInt(2, movie.getDirectorId());
-            statement.executeUpdate();
+            return statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new SQLException(e);
         }
     }
 
     @Override
-    public List<Movie> getAll() {
+    public List<Movie> getAll() throws SQLException {
         List<Movie> movies = new ArrayList<>();
         String query = "SELECT id, title, director_id FROM movies";
+
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 movies.add(new Movie(
                         resultSet.getInt("id"),
@@ -39,55 +42,52 @@ public class MovieDAO extends AbstractDAO<Movie>{
                         resultSet.getInt("director_id")
                 ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return movies;
         }
-        return movies;
     }
 
     @Override
-    public Movie getById(int id) {
+    public Movie get(int id) throws SQLException {
+        Movie movie = null;
         String query = "SELECT id, title FROM movies WHERE id = ?";
+
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return new Movie(
-                        resultSet.getInt("id"),
-                        resultSet.getString("title"),
-                        resultSet.getInt("director_id")
-                );
+                int movieId = resultSet.getInt("id");
+                String movieTitle = resultSet.getString("title");
+                int directorId = resultSet.getInt("director_id");
+                movie = new Movie(movieId, movieTitle, directorId);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+            return movie;
         }
-        return null;
     }
 
     @Override
-    public void update(int id, String newTitle) {
+    public int update(int id, String newTitle) throws SQLException {
         String query = "UPDATE movies SET title = ? WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, newTitle);
             statement.setInt(2, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return statement.executeUpdate();
         }
     }
 
     @Override
-    public boolean removeById(int id) {
+    public int delete(int id) throws SQLException {
         String query = "DELETE FROM movies WHERE id = ?";
+
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setInt(1, id);
-            int rowsDeleted = statement.executeUpdate();
-            return rowsDeleted > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return statement.executeUpdate();
         }
     }
 }

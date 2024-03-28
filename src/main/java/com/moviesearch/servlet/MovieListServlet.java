@@ -10,11 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/movies")
 public class MovieListServlet extends HttpServlet {
-    private MovieDAO movieDAO;
+    private transient MovieDAO movieDAO;
 
     @Override
     public void init() {
@@ -23,7 +24,12 @@ public class MovieListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Movie> movies = movieDAO.getAll();
+        List<Movie> movies = null;
+        try {
+            movies = movieDAO.getAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         request.setAttribute("movies", movies);
         RequestDispatcher dispatcher = request.getRequestDispatcher("movies.jsp");
         dispatcher.forward(request, response);
@@ -34,7 +40,11 @@ public class MovieListServlet extends HttpServlet {
             throws ServletException, IOException {
         String movieIdToDelete = request.getParameter("id");
         if (movieIdToDelete != null) {
-            movieDAO.removeById(Integer.parseInt(movieIdToDelete));
+            try {
+                movieDAO.delete(Integer.parseInt(movieIdToDelete));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         response.sendRedirect("movies");
     }

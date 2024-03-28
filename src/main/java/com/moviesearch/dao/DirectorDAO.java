@@ -10,81 +10,79 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectorDAO extends AbstractDAO<Director> {
+public class DirectorDAO implements DAO<Director> {
 
     @Override
-    public void add(Director director) {
+    public int add(Director director) throws SQLException {
         String query = "INSERT INTO directors(name) VALUES (?)";
+
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(query)){
+
             statement.setString(1, director.getName());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return statement.executeUpdate();
         }
     }
 
     @Override
-    public List<Director> getAll() {
+    public List<Director> getAll() throws SQLException {
         List<Director> directors = new ArrayList<>();
         String query = "SELECT id, name FROM directors";
+
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 directors.add(new Director(
                         resultSet.getInt("id"),
                         resultSet.getString("name")
                 ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return directors;
         }
-        return directors;
-}
-
-@Override
-public Director getById(int id) {
-    String query = "SELECT id, name FROM directors WHERE id = ?";
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setInt(1, id);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Director(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name")
-            );
-        }
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
     }
-    return null;
-}
 
     @Override
-    public void update(int id, String newName) {
-        String query = "UPDATE directors SET name = ? WHERE id = ?";
+    public Director get(int id) throws SQLException {
+        Director director = null;
+        String query = "SELECT id, name FROM directors WHERE id = ?";
+
         try (Connection connection = DatabaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(query);) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int directorId = resultSet.getInt("id");
+                String directorName = resultSet.getString("name");
+                director = new Director(directorId, directorName);
+            }
+            return director;
+        }
+    }
+
+    @Override
+    public int update(int id, String newName) throws SQLException {
+        String query = "UPDATE directors SET name = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, newName);
             statement.setInt(2, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return statement.executeUpdate();
         }
     }
 
     @Override
-public boolean removeById(int id) {
-    String query = "DELETE FROM directors WHERE id = ?";
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setInt(1, id);
-        int rowsDeleted = statement.executeUpdate();
-        return rowsDeleted > 0;
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
+    public int delete(int id) throws SQLException {
+        String query = "DELETE FROM directors WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+            return statement.executeUpdate();
+        }
     }
-}
 }

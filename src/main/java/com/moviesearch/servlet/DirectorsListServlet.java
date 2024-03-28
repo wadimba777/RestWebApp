@@ -1,9 +1,7 @@
 package com.moviesearch.servlet;
 
 import com.moviesearch.dao.DirectorDAO;
-import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Director;
-import com.moviesearch.model.Movie;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,11 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
     @WebServlet(name = "DirectorsListServlet", urlPatterns = "/movies")
     public class DirectorsListServlet extends HttpServlet {
-        private DirectorDAO directorDAO;
+        private transient DirectorDAO directorDAO;
 
         @Override
         public void init() {
@@ -24,20 +23,28 @@ import java.util.List;
         }
 
         @Override
-        public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            List<Director> directors = directorDAO.getAll();
-            request.setAttribute("directors", directors);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("directors.jsp");
-            dispatcher.forward(request, response);
+        public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            List<Director> directors;
+            try {
+                directors = directorDAO.getAll();
+                request.setAttribute("directors", directors);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("directors.jsp");
+                dispatcher.forward(request, response);
+            } catch (SQLException | ServletException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) {
             String directorIdToDelete = request.getParameter("id");
             if (directorIdToDelete != null) {
-                directorDAO.removeById(Integer.parseInt(directorIdToDelete));
+                try {
+                    directorDAO.delete(Integer.parseInt(directorIdToDelete));
+                    response.sendRedirect("directors");
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            response.sendRedirect("directors");
         }
     }

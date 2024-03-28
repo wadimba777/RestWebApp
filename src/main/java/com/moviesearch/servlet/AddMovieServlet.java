@@ -11,13 +11,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(name = "AddMovieServlet", urlPatterns = "/addMovie")
 public class AddMovieServlet extends HttpServlet {
 
-    private DirectorDAO directorDAO;
-    private MovieDAO movieDAO;
+    private transient DirectorDAO directorDAO;
+    private transient MovieDAO movieDAO;
 
     @Override
     public void init() {
@@ -28,7 +30,12 @@ public class AddMovieServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Director> directors = directorDAO.getAll();
+        List<Director> directors = null;
+        try {
+            directors = directorDAO.getAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         request.setAttribute("directors", directors);
         request.getRequestDispatcher("addMovie.jsp").forward(request, response);
     }
@@ -39,13 +46,22 @@ public class AddMovieServlet extends HttpServlet {
         String title = request.getParameter("title");
         int directorId = Integer.parseInt(request.getParameter("directorId"));
 
-        Director director = directorDAO.getById(directorId);
+        Director director = null;
+        try {
+            director = directorDAO.get(directorId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         Movie movie = new Movie();
         movie.setTitle(title);
         movie.setDirectorId(director.getId());
 
-        movieDAO.add(movie);
+        try {
+            movieDAO.add(movie);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         response.sendRedirect("movie-added.jsp");
     }
