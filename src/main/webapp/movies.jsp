@@ -37,7 +37,7 @@
   <%
      ArrayList<Movie> movies = (ArrayList<Movie>) request.getAttribute("movies");
      if (movies != null && !movies.isEmpty()) {
-     DirectorDAO director = new DirectorDAO();
+     DirectorDAO director = new DirectorDAO(DatabaseConnection.getConnection());
      for (Movie movie : movies) {
      %>
         <tr>

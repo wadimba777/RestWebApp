@@ -12,11 +12,16 @@ import java.util.List;
 
 public class MovieDAO implements DAO<Movie> {
 
+    private final Connection connection;
+
+    public MovieDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public int add(Movie movie) throws SQLException {
         String query = "INSERT INTO movies(title, director_id) VALUES (?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, movie.getTitle());
             statement.setInt(2, movie.getDirectorId());
@@ -31,8 +36,7 @@ public class MovieDAO implements DAO<Movie> {
         List<Movie> movies = new ArrayList<>();
         String query = "SELECT id, title, director_id FROM movies";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -51,8 +55,7 @@ public class MovieDAO implements DAO<Movie> {
         Movie movie = null;
         String query = "SELECT id, title FROM movies WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -70,8 +73,7 @@ public class MovieDAO implements DAO<Movie> {
     @Override
     public int update(int id, String newTitle) throws SQLException {
         String query = "UPDATE movies SET title = ? WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, newTitle);
             statement.setInt(2, id);
@@ -83,8 +85,7 @@ public class MovieDAO implements DAO<Movie> {
     public int delete(int id) throws SQLException {
         String query = "DELETE FROM movies WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, id);
             return statement.executeUpdate();

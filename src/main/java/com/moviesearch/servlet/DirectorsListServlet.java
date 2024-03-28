@@ -2,6 +2,7 @@ package com.moviesearch.servlet;
 
 import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.model.Director;
+import com.moviesearch.util.DatabaseConnection;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ import java.util.List;
 
         @Override
         public void init() {
-            directorDAO = new DirectorDAO();
+            directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
         }
 
         @Override

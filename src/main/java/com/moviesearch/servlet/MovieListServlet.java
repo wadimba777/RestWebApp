@@ -2,6 +2,7 @@ package com.moviesearch.servlet;
 
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
+import com.moviesearch.util.DatabaseConnection;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,12 +20,12 @@ public class MovieListServlet extends HttpServlet {
 
     @Override
     public void init() {
-        movieDAO = new MovieDAO();
+        movieDAO = new MovieDAO(DatabaseConnection.getConnection());
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Movie> movies = null;
+        List<Movie> movies;
         try {
             movies = movieDAO.getAll();
         } catch (SQLException e) {

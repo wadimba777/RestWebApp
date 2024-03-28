@@ -11,15 +11,16 @@ public class DatabaseConnection {
     public static final String USER = "postgres";
     public static final String PASSWORD = "y2k";
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
         Connection connection;
 
         try {
             Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-        connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
 
         return connection;
     }

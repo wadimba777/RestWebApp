@@ -6,6 +6,7 @@ import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
 import com.moviesearch.model.Director;
+import com.moviesearch.util.DatabaseConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,8 +24,8 @@ public class AddMovieServlet extends HttpServlet {
 
     @Override
     public void init() {
-        directorDAO = new DirectorDAO();
-        movieDAO = new MovieDAO();
+        directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
+        movieDAO = new MovieDAO(DatabaseConnection.getConnection());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class AddMovieServlet extends HttpServlet {
         String title = request.getParameter("title");
         int directorId = Integer.parseInt(request.getParameter("directorId"));
 
-        Director director = null;
+        Director director;
         try {
             director = directorDAO.get(directorId);
         } catch (SQLException e) {

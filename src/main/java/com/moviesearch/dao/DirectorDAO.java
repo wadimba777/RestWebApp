@@ -12,12 +12,17 @@ import java.util.List;
 
 public class DirectorDAO implements DAO<Director> {
 
+    private final Connection connection;
+
+    public DirectorDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public int add(Director director) throws SQLException {
         String query = "INSERT INTO directors(name) VALUES (?)";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)){
+        try (PreparedStatement statement = connection.prepareStatement(query)){
 
             statement.setString(1, director.getName());
             return statement.executeUpdate();
@@ -29,8 +34,7 @@ public class DirectorDAO implements DAO<Director> {
         List<Director> directors = new ArrayList<>();
         String query = "SELECT id, name FROM directors";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -48,8 +52,7 @@ public class DirectorDAO implements DAO<Director> {
         Director director = null;
         String query = "SELECT id, name FROM directors WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);) {
+        try (PreparedStatement statement = connection.prepareStatement(query);) {
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -66,8 +69,7 @@ public class DirectorDAO implements DAO<Director> {
     public int update(int id, String newName) throws SQLException {
         String query = "UPDATE directors SET name = ? WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, newName);
             statement.setInt(2, id);
@@ -78,8 +80,7 @@ public class DirectorDAO implements DAO<Director> {
     @Override
     public int delete(int id) throws SQLException {
         String query = "DELETE FROM directors WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, id);
             return statement.executeUpdate();

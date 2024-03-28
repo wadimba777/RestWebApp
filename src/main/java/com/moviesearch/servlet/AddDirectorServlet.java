@@ -1,6 +1,7 @@
 package com.moviesearch.servlet;
 import com.moviesearch.model.Director;
 import com.moviesearch.dao.DirectorDAO;
+import com.moviesearch.util.DatabaseConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ public class AddDirectorServlet extends HttpServlet {
 
     @Override
     public void init() {
-        directorDAO = new DirectorDAO();
+        directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
     }
 
     @Override
