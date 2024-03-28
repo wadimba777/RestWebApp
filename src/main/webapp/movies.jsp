@@ -43,7 +43,7 @@
         <tr>
             <td><%= movie.getId() %></td>
             <td><%= movie.getTitle() %></td>
-            <td><%= director.getById(movie.getDirectorId()).getName() %></td>
+            <td><%= director.get(movie.getDirectorId()).getName() %></td>
             <td>
                   <form action="movies" method="post">
                        <input type="hidden" name="id" value="<%= movie.getId() %>">
