@@ -63,9 +63,9 @@ public class MovieDAOTest {
     void addMovie_ShouldAddMovieToDatabase() throws SQLException {
         Movie movie = new Movie(1, "Test Movie", 1);
 
-        int result = movieDAO.add(movie);
+        Movie result = movieDAO.add(movie);
 
-        assertEquals(1, result);
+        assertEquals(movie, result);
     }
 
     @Test

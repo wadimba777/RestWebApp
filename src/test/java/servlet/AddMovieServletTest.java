@@ -56,7 +56,7 @@ class AddMovieServletTest {
         when(request.getParameter("title")).thenReturn(title);
         when(request.getParameter("directorId")).thenReturn(String.valueOf(directorId));
         when(directorDAO.get(directorId)).thenReturn(director);
-        doReturn(1).when(movieDAO).add(any(Movie.class));
+        doReturn(new Movie(1, title, directorId)).when(movieDAO).add(any(Movie.class));
 
         servlet.doPost(request, response);
 

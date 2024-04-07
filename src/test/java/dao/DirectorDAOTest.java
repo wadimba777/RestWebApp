@@ -53,9 +53,9 @@ public class DirectorDAOTest {
 
         Director director = new Director(1, "Test Director");
 
-        int result = directorDAO.add(director);
+        Director result = directorDAO.add(director);
 
-        assertEquals(1, result);
+        assertEquals(director, result);
     }
 
     @Test

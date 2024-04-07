@@ -45,7 +45,7 @@ class AddDirectorServletTest {
 
         String directorName = "Test Director";
         when(request.getParameter("name")).thenReturn(directorName);
-        when(directorDAO.add(any(Director.class))).thenReturn(1);
+        when(directorDAO.add(any(Director.class))).thenReturn(new Director(1, directorName));
 
         servlet.doPost(request, response);
 
