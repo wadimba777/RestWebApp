@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.moviesearch.model.Movie" %>
-<%@ page import="com.moviesearch.dao.DirectorDAO" %>
+<%@ page import="com.moviesearch.service.DirectorService" %>
 <html>
 <head>
     <title>Movie Search - List</title>
@@ -37,7 +37,7 @@
   <%
      ArrayList<Movie> movies = (ArrayList<Movie>) request.getAttribute("movies");
      if (movies != null && !movies.isEmpty()) {
-     DirectorDAO director = new DirectorDAO(DatabaseConnection.getConnection());
+     DirectorService director = DirectorService.getDirectorService();
      for (Movie movie : movies) {
      %>
         <tr>

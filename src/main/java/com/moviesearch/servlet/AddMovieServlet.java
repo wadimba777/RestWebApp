@@ -25,7 +25,7 @@ public class AddMovieServlet extends HttpServlet {
 //    private transient DirectorMovieDAO directorMovieDAO;
 
     /**
-     * Инициализирует объекты DirectorDAO и MovieDAO при запуске сервлета.
+     * Инициализирует объекты DirectorService и MovieService при запуске сервлета.
      */
     @Override
     public void init() {
@@ -71,6 +71,7 @@ public class AddMovieServlet extends HttpServlet {
         movie.setDirectorId(director.getId());
 
         movieService.add(movie);
+
 
         response.sendRedirect("movie-added.jsp");
     }

@@ -18,7 +18,7 @@ public class AddDirectorServlet extends HttpServlet {
     private transient DirectorService directorService;
 
     /**
-     * Инициализирует объект DirectorDAO при запуске сервлета.
+     * Инициализирует объект DirectorService при запуске сервлета.
      */
     @Override
     public void init() {
