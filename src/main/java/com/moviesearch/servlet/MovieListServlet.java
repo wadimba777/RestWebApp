@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -37,11 +36,8 @@ public class MovieListServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Movie> movies;
-        try {
-            movies = movieDAO.getAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        movies = movieDAO.getAll();
+
         request.setAttribute("movies", movies);
         RequestDispatcher dispatcher = request.getRequestDispatcher("movies.jsp");
         dispatcher.forward(request, response);
@@ -52,18 +48,13 @@ public class MovieListServlet extends HttpServlet {
      *
      * @param request  объект HttpServletRequest
      * @param response объект HttpServletResponse
-     * @throws ServletException если произошла ошибка сервлета
-     * @throws IOException      если произошла ошибка ввода-вывода
+     * @throws IOException если произошла ошибка ввода-вывода
      */
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String movieIdToDelete = request.getParameter("id");
         if (movieIdToDelete != null) {
-            try {
-                movieDAO.delete(Integer.parseInt(movieIdToDelete));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            movieDAO.delete(Integer.parseInt(movieIdToDelete));
         }
         response.sendRedirect("movies");
     }

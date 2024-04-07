@@ -48,11 +48,8 @@ public class AddMovieServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Director> directors;
-        try {
-            directors = directorDAO.getAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        directors = directorDAO.getAll();
+
         request.setAttribute("directors", directors);
         request.getRequestDispatcher("addMovie.jsp").forward(request, response);
     }
@@ -63,7 +60,6 @@ public class AddMovieServlet extends HttpServlet {
      * @param request  запрос
      * @param response ответ
      * @throws IOException      если произошла ошибка ввода/вывода
-     * @throws RuntimeException если произошла ошибка выполнения SQL-запроса
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -71,21 +67,13 @@ public class AddMovieServlet extends HttpServlet {
         int directorId = Integer.parseInt(request.getParameter("directorId"));
 
         Director director;
-        try {
-            director = directorDAO.get(directorId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        director = directorDAO.get(directorId);
 
         Movie movie = new Movie();
         movie.setTitle(title);
         movie.setDirectorId(director.getId());
 
-        try {
-            movieDAO.add(movie);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        movieDAO.add(movie);
 
         response.sendRedirect("movie-added.jsp");
     }

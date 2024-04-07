@@ -41,7 +41,7 @@ public class DirectorsListServlet extends HttpServlet {
             request.setAttribute("directors", directors);
             RequestDispatcher dispatcher = request.getRequestDispatcher("directors.jsp");
             dispatcher.forward(request, response);
-        } catch (SQLException | ServletException e) {
+        } catch (ServletException e) {
             throw new RuntimeException(e);
         }
     }
@@ -59,7 +59,7 @@ public class DirectorsListServlet extends HttpServlet {
             try {
                 directorDAO.delete(Integer.parseInt(directorIdToDelete));
                 response.sendRedirect("directors");
-            } catch (SQLException | IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }

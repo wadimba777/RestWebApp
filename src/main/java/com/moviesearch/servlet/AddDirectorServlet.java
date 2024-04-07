@@ -1,4 +1,5 @@
 package com.moviesearch.servlet;
+
 import com.moviesearch.model.Director;
 import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.util.DatabaseConnection;
@@ -8,8 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
 
 /**
  * Сервлет для добавления режиссера.
@@ -45,7 +44,6 @@ public class AddDirectorServlet extends HttpServlet {
      * @param request  запрос
      * @param response ответ
      * @throws IOException      если произошла ошибка ввода/вывода
-     * @throws RuntimeException если произошла ошибка выполнения SQL-запроса
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -54,11 +52,7 @@ public class AddDirectorServlet extends HttpServlet {
         Director director = new Director();
         director.setName(name);
 
-        try {
-            directorDAO.add(director);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        directorDAO.add(director);
 
         response.sendRedirect("director-added.jsp");
     }
