@@ -1,7 +1,7 @@
 package servlet;
 
-import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.model.Director;
+import com.moviesearch.service.DirectorService;
 import com.moviesearch.servlet.AddDirectorServlet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class AddDirectorServletTest {
     private AddDirectorServlet servlet;
 
     @Mock
-    private DirectorDAO directorDAO;
+    private DirectorService directorService;
 
     @Mock
     private HttpServletRequest request;
@@ -45,11 +45,11 @@ class AddDirectorServletTest {
 
         String directorName = "Test Director";
         when(request.getParameter("name")).thenReturn(directorName);
-        when(directorDAO.add(any(Director.class))).thenReturn(new Director(1, directorName));
+        when(directorService.add(any(Director.class))).thenReturn(new Director(1, directorName));
 
         servlet.doPost(request, response);
 
-        verify(directorDAO, times(1))
+        verify(directorService, times(1))
                 .add(argThat(director -> director.getName().equals(directorName)));
         verify(response, times(1))
                 .sendRedirect("director-added.jsp");

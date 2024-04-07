@@ -4,6 +4,8 @@ import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Director;
 import com.moviesearch.model.Movie;
+import com.moviesearch.service.DirectorService;
+import com.moviesearch.service.MovieService;
 import com.moviesearch.servlet.AddMovieServlet;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,10 +31,10 @@ class AddMovieServletTest {
     private AddMovieServlet servlet;
 
     @Mock
-    private DirectorDAO directorDAO;
+    private DirectorService directorDAO;
 
     @Mock
-    private MovieDAO movieDAO;
+    private MovieService movieDAO;
 
     @Mock
     private HttpServletRequest request;

@@ -2,6 +2,7 @@ package servlet;
 
 import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.model.Director;
+import com.moviesearch.service.DirectorService;
 import com.moviesearch.servlet.DirectorsListServlet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class DirectorsListServletTest {
     private DirectorsListServlet servlet;
 
     @Mock
-    private DirectorDAO directorDAO;
+    private DirectorService directorDAO;
 
     @Mock
     private HttpServletRequest request;

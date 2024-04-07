@@ -2,6 +2,7 @@ package servlet;
 
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
+import com.moviesearch.service.MovieService;
 import com.moviesearch.servlet.MovieListServlet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class MovieListServletTest {
     private MovieListServlet servlet;
 
     @Mock
-    private MovieDAO movieDAO;
+    private MovieService movieDAO;
 
     @Mock
     private HttpServletRequest request;
