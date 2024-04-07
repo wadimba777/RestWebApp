@@ -69,7 +69,7 @@ public class DirectorDAO implements DAO<Director> {
         Director director = null;
         String query = "SELECT id, name FROM directors WHERE id = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(query);) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
