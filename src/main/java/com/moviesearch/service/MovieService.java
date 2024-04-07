@@ -3,20 +3,21 @@ package com.moviesearch.service;
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
 import com.moviesearch.util.DatabaseConnection;
+import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * Сервисный слой для управдения объектами Movie
+ */
 public class MovieService {
+    @Getter
     private static final MovieService movieService = new MovieService();
 
     private MovieService() {
     }
 
-    public static MovieService getMovieService() {
-        return movieService;
-    }
-
-    private MovieDAO movieDAO = new MovieDAO(DatabaseConnection.getConnection());
+    private final MovieDAO movieDAO = new MovieDAO(DatabaseConnection.getConnection());
 
     public Movie add(Movie movie) {
         return movieDAO.add(movie);

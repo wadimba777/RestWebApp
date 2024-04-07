@@ -23,12 +23,6 @@ public class MovieDAO implements DAO<Movie> {
         this.connection = connection;
     }
 
-    /**
-     * Добавляет новый фильм в базу данных.
-     *
-     * @param movie объект фильма для добавления
-     * @return количество добавленных строк в базу данных
-     */
     @Override
     public Movie add(Movie movie)   {
         String query = "INSERT INTO movies(title, director_id) VALUES (?, ?)";
@@ -48,11 +42,6 @@ public class MovieDAO implements DAO<Movie> {
         }
     }
 
-    /**
-     * Возвращает список всех фильмов из базы данных.
-     *
-     * @return список всех фильмов
-     */
     @Override
     public List<Movie> getAll() {
         List<Movie> movies = new ArrayList<>();
@@ -72,12 +61,6 @@ public class MovieDAO implements DAO<Movie> {
         }
     }
 
-    /**
-     * Возвращает фильм по его уникальному идентификатору.
-     *
-     * @param id уникальный идентификатор фильма
-     * @return объект фильма с указанным идентификатором, или null, если фильм не найден
-     */
     @Override
     public Movie get(int id) {
         Movie movie = null;
@@ -97,13 +80,6 @@ public class MovieDAO implements DAO<Movie> {
         }
     }
 
-    /**
-     * Обновляет название фильма с указанным идентификатором.
-     *
-     * @param id       уникальный идентификатор фильма
-     * @param newTitle новое название фильма
-     * @return количество обновленных строк в базе данных
-     */
     @Override
     public int update(int id, String newTitle) {
         String query = "UPDATE movies SET title = ? WHERE id = ?";
@@ -116,12 +92,6 @@ public class MovieDAO implements DAO<Movie> {
         }
     }
 
-    /**
-     * Удаляет фильм с указанным идентификатором из базы данных.
-     *
-     * @param id уникальный идентификатор фильма для удаления
-     * @return количество удаленных строк в базе данных
-     */
     @Override
     public int delete(int id) {
         String query = "DELETE FROM movies WHERE id = ?";

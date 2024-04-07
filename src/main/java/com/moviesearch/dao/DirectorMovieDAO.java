@@ -1,6 +1,5 @@
 package com.moviesearch.dao;
 
-import com.moviesearch.model.Director;
 import com.moviesearch.model.DirectorMovie;
 
 import java.sql.Connection;
@@ -10,10 +9,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Реализация интерфейса DAO для работы с объектами типа DirectorMovie.
+ */
+
 public class DirectorMovieDAO implements DAO<DirectorMovie> {
 
     private final Connection connection;
-
+    /**
+     * Создает новый объект DirectorMovieDAO с указанным соединением к базе данных.
+     *
+     * @param connection соединение к базе данных
+     */
     public DirectorMovieDAO(Connection connection) {
         this.connection = connection;
     }

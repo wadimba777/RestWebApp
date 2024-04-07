@@ -25,12 +25,6 @@ public class DirectorDAO implements DAO<Director> {
         this.connection = connection;
     }
 
-    /**
-     * Добавляет нового режиссера в базу данных.
-     *
-     * @param director объект режиссера для добавления
-     * @return количество добавленных строк в базу данных
-     */
     @Override
     public Director add(Director director) {
         String query = "INSERT INTO directors(name) VALUES (?)";
@@ -50,11 +44,6 @@ public class DirectorDAO implements DAO<Director> {
         }
     }
 
-    /**
-     * Возвращает список всех режиссеров из базы данных.
-     *
-     * @return список всех режиссеров
-     */
     @Override
     public List<Director> getAll() {
         List<Director> directors = new ArrayList<>();
@@ -75,12 +64,6 @@ public class DirectorDAO implements DAO<Director> {
         }
     }
 
-    /**
-     * Возвращает режиссера по его уникальному идентификатору.
-     *
-     * @param id уникальный идентификатор режиссера
-     * @return объект режиссера с указанным идентификатором, или null, если режиссер не найден
-     */
     @Override
     public Director get(int id) {
         Director director = null;
@@ -101,13 +84,6 @@ public class DirectorDAO implements DAO<Director> {
         }
     }
 
-    /**
-     * Обновляет имя режиссера с указанным идентификатором.
-     *
-     * @param id      уникальный идентификатор режиссера
-     * @param newName новое имя режиссера
-     * @return количество обновленных строк в базе данных
-     */
     @Override
     public int update(int id, String newName) {
         String query = "UPDATE directors SET name = ? WHERE id = ?";
@@ -122,12 +98,6 @@ public class DirectorDAO implements DAO<Director> {
         }
     }
 
-    /**
-     * Удаляет режиссера с указанным идентификатором из базы данных.
-     *
-     * @param id уникальный идентификатор режиссера для удаления
-     * @return количество удаленных строк в базе данных
-     */
     @Override
     public int delete(int id) {
         String query = "DELETE FROM directors WHERE id = ?";
