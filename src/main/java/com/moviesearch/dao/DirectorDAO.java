@@ -30,16 +30,23 @@ public class DirectorDAO implements DAO<Director> {
      *
      * @param director объект режиссера для добавления
      * @return количество добавленных строк в базу данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int add(Director director) throws SQLException {
+    public Director add(Director director) {
         String query = "INSERT INTO directors(name) VALUES (?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)){
+        try (PreparedStatement statement = connection
+                .prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, director.getName());
-            return statement.executeUpdate();
+            statement.executeUpdate();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                director.setId(generatedKeys.getInt("id"));
+            }
+            return director;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -47,10 +54,9 @@ public class DirectorDAO implements DAO<Director> {
      * Возвращает список всех режиссеров из базы данных.
      *
      * @return список всех режиссеров
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public List<Director> getAll() throws SQLException {
+    public List<Director> getAll() {
         List<Director> directors = new ArrayList<>();
         String query = "SELECT id, name FROM directors";
 
@@ -64,6 +70,8 @@ public class DirectorDAO implements DAO<Director> {
                 ));
             }
             return directors;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -72,10 +80,9 @@ public class DirectorDAO implements DAO<Director> {
      *
      * @param id уникальный идентификатор режиссера
      * @return объект режиссера с указанным идентификатором, или null, если режиссер не найден
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public Director get(int id) throws SQLException {
+    public Director get(int id) {
         Director director = null;
         String query = "SELECT id, name FROM directors WHERE id = ?";
 
@@ -89,6 +96,8 @@ public class DirectorDAO implements DAO<Director> {
                 director = new Director(directorId, directorName);
             }
             return director;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -98,10 +107,9 @@ public class DirectorDAO implements DAO<Director> {
      * @param id      уникальный идентификатор режиссера
      * @param newName новое имя режиссера
      * @return количество обновленных строк в базе данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int update(int id, String newName) throws SQLException {
+    public int update(int id, String newName) {
         String query = "UPDATE directors SET name = ? WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -109,6 +117,8 @@ public class DirectorDAO implements DAO<Director> {
             statement.setString(1, newName);
             statement.setInt(2, id);
             return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,15 +127,16 @@ public class DirectorDAO implements DAO<Director> {
      *
      * @param id уникальный идентификатор режиссера для удаления
      * @return количество удаленных строк в базе данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int delete(int id) throws SQLException {
+    public int delete(int id) {
         String query = "DELETE FROM directors WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, id);
             return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -14,10 +14,10 @@ public interface DAO<T> {
      * Добавляет новый объект в базу данных.
      *
      * @param t объект для добавления
-     * @return уникальный идентификатор добавленного объекта
+     * @return новый объект класса T
      * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
-    int add(T t) throws SQLException;
+    T add(T t) throws SQLException;
 
     /**
      * Возвращает список всех объектов из базы данных.

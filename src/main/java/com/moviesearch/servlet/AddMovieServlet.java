@@ -3,6 +3,7 @@ package com.moviesearch.servlet;
 import java.io.IOException;
 
 import com.moviesearch.dao.DirectorDAO;
+import com.moviesearch.dao.DirectorMovieDAO;
 import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
 import com.moviesearch.model.Director;
@@ -24,6 +25,7 @@ public class AddMovieServlet extends HttpServlet {
 
     private transient DirectorDAO directorDAO;
     private transient MovieDAO movieDAO;
+//    private transient DirectorMovieDAO directorMovieDAO;
 
     /**
      * Инициализирует объекты DirectorDAO и MovieDAO при запуске сервлета.
@@ -32,6 +34,7 @@ public class AddMovieServlet extends HttpServlet {
     public void init() {
         directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
         movieDAO = new MovieDAO(DatabaseConnection.getConnection());
+//        directorMovieDAO = new DirectorMovieDAO(DatabaseConnection.getConnection());
     }
 
     /**

@@ -31,15 +31,22 @@ public class MovieDAO implements DAO<Movie> {
      *
      * @param movie объект фильма для добавления
      * @return количество добавленных строк в базу данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int add(Movie movie) throws SQLException {
+    public Movie add(Movie movie)   {
         String query = "INSERT INTO movies(title, director_id) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, movie.getTitle());
             statement.setInt(2, movie.getDirectorId());
-            return statement.executeUpdate();
+            statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                movie.setId(generatedKeys.getInt("id"));
+            }
+            return movie;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -47,10 +54,9 @@ public class MovieDAO implements DAO<Movie> {
      * Возвращает список всех фильмов из базы данных.
      *
      * @return список всех фильмов
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public List<Movie> getAll() throws SQLException {
+    public List<Movie> getAll() {
         List<Movie> movies = new ArrayList<>();
         String query = "SELECT id, title, director_id FROM movies";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -63,6 +69,8 @@ public class MovieDAO implements DAO<Movie> {
                 ));
             }
             return movies;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,10 +79,9 @@ public class MovieDAO implements DAO<Movie> {
      *
      * @param id уникальный идентификатор фильма
      * @return объект фильма с указанным идентификатором, или null, если фильм не найден
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public Movie get(int id) throws SQLException {
+    public Movie get(int id) {
         Movie movie = null;
         String query = "SELECT id, title, director_id FROM movies WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -87,6 +94,8 @@ public class MovieDAO implements DAO<Movie> {
                 movie = new Movie(movieId, movieTitle, directorId);
             }
             return movie;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -96,15 +105,16 @@ public class MovieDAO implements DAO<Movie> {
      * @param id       уникальный идентификатор фильма
      * @param newTitle новое название фильма
      * @return количество обновленных строк в базе данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int update(int id, String newTitle) throws SQLException {
+    public int update(int id, String newTitle) {
         String query = "UPDATE movies SET title = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, newTitle);
             statement.setInt(2, id);
             return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -113,14 +123,15 @@ public class MovieDAO implements DAO<Movie> {
      *
      * @param id уникальный идентификатор фильма для удаления
      * @return количество удаленных строк в базе данных
-     * @throws SQLException если произошла ошибка при выполнении SQL-запроса
      */
     @Override
-    public int delete(int id) throws SQLException {
+    public int delete(int id) {
         String query = "DELETE FROM movies WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

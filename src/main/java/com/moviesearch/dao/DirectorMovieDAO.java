@@ -19,18 +19,27 @@ public class DirectorMovieDAO implements DAO<DirectorMovie> {
     }
 
     @Override
-    public int add(DirectorMovie directorMovie) throws SQLException {
+    public DirectorMovie add(DirectorMovie directorMovie) {
         String query = "INSERT INTO directors_movies(director_id, movie_id) VALUES(?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection
+                .prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, directorMovie.getDirectorId());
             statement.setInt(2, directorMovie.getMovieId());
-            return statement.executeUpdate();
+            statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                directorMovie.setId(generatedKeys.getInt("id"));
+            }
+            return directorMovie;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<DirectorMovie> getAll() throws SQLException {
+    public List<DirectorMovie> getAll() {
         List<DirectorMovie> direcrtorsMovies = new ArrayList<>();
         String query = "SELECT id, director_id, movie_id FROM directors_movies";
 
@@ -43,12 +52,14 @@ public class DirectorMovieDAO implements DAO<DirectorMovie> {
                         resultSet.getInt("movie_id")
                 ));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return direcrtorsMovies;
     }
 
     @Override
-    public DirectorMovie get(int id) throws SQLException {
+    public DirectorMovie get(int id) {
         DirectorMovie directorMovie = null;
         String query = "SELECT id, director_id, movie_id FROM directors_movies WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -61,6 +72,8 @@ public class DirectorMovieDAO implements DAO<DirectorMovie> {
                         resultSet.getInt("movie_id")
                 );
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return directorMovie;
     }
@@ -71,11 +84,13 @@ public class DirectorMovieDAO implements DAO<DirectorMovie> {
     }
 
     @Override
-    public int delete(int id) throws SQLException {
+    public int delete(int id) {
         String query = "DELETE FROM directors_movies WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
