@@ -61,7 +61,7 @@ public class MovieListServlet extends HttpServlet {
                         .get(Integer.parseInt(directorMovieIdToDelete))
                         .getMovieId())
                 .getId();
-        if (movieIdToDelete != 0) {
+        if (directorMovieIdToDelete != null) {
             directorMovieService.delete(Integer.parseInt(directorMovieIdToDelete));
             movieService.delete(movieIdToDelete);
         }
