@@ -1,8 +1,7 @@
 package com.moviesearch.servlet;
 
-import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
-import com.moviesearch.util.DatabaseConnection;
+import com.moviesearch.service.MovieService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,11 +17,11 @@ import java.util.List;
  */
 @WebServlet(name = "MovieListServlet", urlPatterns = "/movies")
 public class MovieListServlet extends HttpServlet {
-    private transient MovieDAO movieDAO;
+    private transient MovieService movieService;
 
     @Override
     public void init() {
-        movieDAO = new MovieDAO(DatabaseConnection.getConnection());
+        movieService = MovieService.getMovieService();
     }
 
     /**
@@ -36,7 +35,7 @@ public class MovieListServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Movie> movies;
-        movies = movieDAO.getAll();
+        movies = movieService.getAll();
 
         request.setAttribute("movies", movies);
         RequestDispatcher dispatcher = request.getRequestDispatcher("movies.jsp");
@@ -54,7 +53,7 @@ public class MovieListServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String movieIdToDelete = request.getParameter("id");
         if (movieIdToDelete != null) {
-            movieDAO.delete(Integer.parseInt(movieIdToDelete));
+            movieService.delete(Integer.parseInt(movieIdToDelete));
         }
         response.sendRedirect("movies");
     }

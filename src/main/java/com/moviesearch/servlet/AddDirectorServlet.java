@@ -1,8 +1,7 @@
 package com.moviesearch.servlet;
 
 import com.moviesearch.model.Director;
-import com.moviesearch.dao.DirectorDAO;
-import com.moviesearch.util.DatabaseConnection;
+import com.moviesearch.service.DirectorService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,14 +15,14 @@ import java.io.IOException;
 @WebServlet(name = "AddDirectorServlet", urlPatterns = "/addDirector")
 public class AddDirectorServlet extends HttpServlet {
 
-    private transient DirectorDAO directorDAO;
+    private transient DirectorService directorService;
 
     /**
      * Инициализирует объект DirectorDAO при запуске сервлета.
      */
     @Override
     public void init() {
-        directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
+        directorService = DirectorService.getDirectorService();
     }
 
     /**
@@ -52,7 +51,7 @@ public class AddDirectorServlet extends HttpServlet {
         Director director = new Director();
         director.setName(name);
 
-        directorDAO.add(director);
+        directorService.add(director);
 
         response.sendRedirect("director-added.jsp");
     }

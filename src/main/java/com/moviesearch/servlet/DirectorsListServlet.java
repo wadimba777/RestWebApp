@@ -1,8 +1,7 @@
 package com.moviesearch.servlet;
 
-import com.moviesearch.dao.DirectorDAO;
 import com.moviesearch.model.Director;
-import com.moviesearch.util.DatabaseConnection;
+import com.moviesearch.service.DirectorService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -19,11 +17,11 @@ import java.util.List;
  */
 @WebServlet(name = "DirectorsListServlet", urlPatterns = "/directors")
 public class DirectorsListServlet extends HttpServlet {
-    private transient DirectorDAO directorDAO;
+    private transient DirectorService directorService;
 
     @Override
     public void init() {
-        directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
+        directorService = DirectorService.getDirectorService();
     }
 
     /**
@@ -37,7 +35,7 @@ public class DirectorsListServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<Director> directors;
         try {
-            directors = directorDAO.getAll();
+            directors = directorService.getAll();
             request.setAttribute("directors", directors);
             RequestDispatcher dispatcher = request.getRequestDispatcher("directors.jsp");
             dispatcher.forward(request, response);
@@ -57,7 +55,7 @@ public class DirectorsListServlet extends HttpServlet {
         String directorIdToDelete = request.getParameter("id");
         if (directorIdToDelete != null) {
             try {
-                directorDAO.delete(Integer.parseInt(directorIdToDelete));
+                directorService.delete(Integer.parseInt(directorIdToDelete));
                 response.sendRedirect("directors");
             } catch (IOException e) {
                 throw new RuntimeException(e);

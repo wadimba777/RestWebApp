@@ -2,19 +2,16 @@ package com.moviesearch.servlet;
 
 import java.io.IOException;
 
-import com.moviesearch.dao.DirectorDAO;
-import com.moviesearch.dao.DirectorMovieDAO;
-import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Movie;
 import com.moviesearch.model.Director;
-import com.moviesearch.util.DatabaseConnection;
+import com.moviesearch.service.DirectorService;
+import com.moviesearch.service.MovieService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -23,8 +20,8 @@ import java.util.List;
 @WebServlet(name = "AddMovieServlet", urlPatterns = "/addMovie")
 public class AddMovieServlet extends HttpServlet {
 
-    private transient DirectorDAO directorDAO;
-    private transient MovieDAO movieDAO;
+    private transient DirectorService directorService;
+    private transient MovieService movieService;
 //    private transient DirectorMovieDAO directorMovieDAO;
 
     /**
@@ -32,8 +29,8 @@ public class AddMovieServlet extends HttpServlet {
      */
     @Override
     public void init() {
-        directorDAO = new DirectorDAO(DatabaseConnection.getConnection());
-        movieDAO = new MovieDAO(DatabaseConnection.getConnection());
+        directorService = DirectorService.getDirectorService();
+        movieService = MovieService.getMovieService();
 //        directorMovieDAO = new DirectorMovieDAO(DatabaseConnection.getConnection());
     }
 
@@ -48,7 +45,7 @@ public class AddMovieServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Director> directors;
-        directors = directorDAO.getAll();
+        directors = directorService.getAll();
 
         request.setAttribute("directors", directors);
         request.getRequestDispatcher("addMovie.jsp").forward(request, response);
@@ -67,13 +64,13 @@ public class AddMovieServlet extends HttpServlet {
         int directorId = Integer.parseInt(request.getParameter("directorId"));
 
         Director director;
-        director = directorDAO.get(directorId);
+        director = directorService.get(directorId);
 
         Movie movie = new Movie();
         movie.setTitle(title);
         movie.setDirectorId(director.getId());
 
-        movieDAO.add(movie);
+        movieService.add(movie);
 
         response.sendRedirect("movie-added.jsp");
     }
