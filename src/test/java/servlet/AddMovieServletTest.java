@@ -1,9 +1,9 @@
 package servlet;
 
-import com.moviesearch.dao.DirectorDAO;
-import com.moviesearch.dao.MovieDAO;
 import com.moviesearch.model.Director;
+import com.moviesearch.model.DirectorMovie;
 import com.moviesearch.model.Movie;
+import com.moviesearch.service.DirectorMovieService;
 import com.moviesearch.service.DirectorService;
 import com.moviesearch.service.MovieService;
 import com.moviesearch.servlet.AddMovieServlet;
@@ -31,10 +31,13 @@ class AddMovieServletTest {
     private AddMovieServlet servlet;
 
     @Mock
-    private DirectorService directorDAO;
+    private DirectorService directorService;
 
     @Mock
-    private MovieService movieDAO;
+    private DirectorMovieService directorMovieService;
+
+    @Mock
+    private MovieService movieService;
 
     @Mock
     private HttpServletRequest request;
@@ -51,24 +54,25 @@ class AddMovieServletTest {
     }
 
     @Test
-    void testDoPost() throws IOException, SQLException {
+    void testDoPost() throws IOException {
         String title = "Test Movie";
         int directorId = 1;
-        Director director = new Director(directorId, "Director 1");
+        Director director = new Director(directorId, "Director Name");
+        Movie movie = new Movie(1, title, directorId);
+
         when(request.getParameter("title")).thenReturn(title);
         when(request.getParameter("directorId")).thenReturn(String.valueOf(directorId));
-        when(directorDAO.get(directorId)).thenReturn(director);
-        doReturn(new Movie(1, title, directorId)).when(movieDAO).add(any(Movie.class));
+        when(directorService.get(directorId)).thenReturn(director);
+        when(movieService.add(any(Movie.class))).thenReturn(movie);
 
         servlet.doPost(request, response);
 
-        verify(movieDAO, times(1))
-                .add(argThat(movie -> movie.getTitle().equals(title)
-                        && movie.getDirectorId() == directorId)
-                );
-        verify(response, times(1))
-                .sendRedirect("movie-added.jsp");
+        verify(movieService, times(1)).add(any(Movie.class));
+        verify(directorMovieService, times(1)).add(any(DirectorMovie.class));
+        verify(response, times(1)).sendRedirect("movie-added.jsp");
     }
+
+
 
     @Test
     void testDoGet() throws IOException, ServletException, SQLException {
@@ -76,7 +80,7 @@ class AddMovieServletTest {
                 new Director(1, "Director 1"),
                 new Director(2, "Director 2")
         );
-        when(directorDAO.getAll()).thenReturn(directors);
+        when(directorService.getAll()).thenReturn(directors);
         when(request.getRequestDispatcher("addMovie.jsp")).thenReturn(requestDispatcher);
 
         servlet.doGet(request, response);
