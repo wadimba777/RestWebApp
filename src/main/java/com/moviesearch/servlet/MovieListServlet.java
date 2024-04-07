@@ -1,6 +1,8 @@
 package com.moviesearch.servlet;
 
+import com.moviesearch.model.DirectorMovie;
 import com.moviesearch.model.Movie;
+import com.moviesearch.service.DirectorMovieService;
 import com.moviesearch.service.MovieService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,10 +20,12 @@ import java.util.List;
 @WebServlet(name = "MovieListServlet", urlPatterns = "/movies")
 public class MovieListServlet extends HttpServlet {
     private transient MovieService movieService;
+    private transient DirectorMovieService directorMovieService;
 
     @Override
     public void init() {
         movieService = MovieService.getMovieService();
+        directorMovieService = DirectorMovieService.getDirectorMovieService();
     }
 
     /**
@@ -34,8 +38,8 @@ public class MovieListServlet extends HttpServlet {
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Movie> movies;
-        movies = movieService.getAll();
+        List<DirectorMovie> movies;
+        movies = directorMovieService.getAll();
 
         request.setAttribute("movies", movies);
         RequestDispatcher dispatcher = request.getRequestDispatcher("movies.jsp");
@@ -51,9 +55,15 @@ public class MovieListServlet extends HttpServlet {
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String movieIdToDelete = request.getParameter("id");
-        if (movieIdToDelete != null) {
-            movieService.delete(Integer.parseInt(movieIdToDelete));
+        String directorMovieIdToDelete = request.getParameter("id");
+        int movieIdToDelete = movieService
+                .get(directorMovieService
+                        .get(Integer.parseInt(directorMovieIdToDelete))
+                        .getMovieId())
+                .getId();
+        if (movieIdToDelete != 0) {
+            directorMovieService.delete(Integer.parseInt(directorMovieIdToDelete));
+            movieService.delete(movieIdToDelete);
         }
         response.sendRedirect("movies");
     }

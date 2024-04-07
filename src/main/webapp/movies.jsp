@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.moviesearch.model.Movie" %>
+<%@ page import="com.moviesearch.model.Director" %>
+<%@ page import="com.moviesearch.model.DirectorMovie" %>
 <%@ page import="com.moviesearch.service.DirectorService" %>
+<%@ page import="com.moviesearch.service.MovieService" %>
 <html>
 <head>
     <title>Movie Search - List</title>
@@ -35,15 +38,16 @@
         </tr>
     </head>
   <%
-     ArrayList<Movie> movies = (ArrayList<Movie>) request.getAttribute("movies");
+     ArrayList<DirectorMovie> movies = (ArrayList<DirectorMovie>) request.getAttribute("movies");
      if (movies != null && !movies.isEmpty()) {
-     DirectorService director = DirectorService.getDirectorService();
-     for (Movie movie : movies) {
+     DirectorService directorService = DirectorService.getDirectorService();
+     MovieService movieService = MovieService.getMovieService();
+     for (DirectorMovie movie : movies) {
      %>
         <tr>
             <td><%= movie.getId() %></td>
-            <td><%= movie.getTitle() %></td>
-            <td><%= director.get(movie.getDirectorId()).getName() %></td>
+            <td><%= movieService.get(movie.getMovieId()).getTitle() %></td>
+            <td><%= directorService.get(movie.getDirectorId()).getName()%></td>
             <td>
                   <form action="movies" method="post">
                        <input type="hidden" name="id" value="<%= movie.getId() %>">

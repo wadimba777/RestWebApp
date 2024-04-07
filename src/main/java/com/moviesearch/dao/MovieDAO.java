@@ -2,10 +2,7 @@ package com.moviesearch.dao;
 
 import com.moviesearch.model.Movie;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +32,8 @@ public class MovieDAO implements DAO<Movie> {
     @Override
     public Movie add(Movie movie)   {
         String query = "INSERT INTO movies(title, director_id) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection
+                .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, movie.getTitle());
             statement.setInt(2, movie.getDirectorId());
             statement.executeUpdate();

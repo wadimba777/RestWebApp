@@ -2,8 +2,10 @@ package com.moviesearch.servlet;
 
 import java.io.IOException;
 
+import com.moviesearch.model.DirectorMovie;
 import com.moviesearch.model.Movie;
 import com.moviesearch.model.Director;
+import com.moviesearch.service.DirectorMovieService;
 import com.moviesearch.service.DirectorService;
 import com.moviesearch.service.MovieService;
 import jakarta.servlet.ServletException;
@@ -22,7 +24,7 @@ public class AddMovieServlet extends HttpServlet {
 
     private transient DirectorService directorService;
     private transient MovieService movieService;
-//    private transient DirectorMovieDAO directorMovieDAO;
+   private transient DirectorMovieService directorMovieService;
 
     /**
      * Инициализирует объекты DirectorService и MovieService при запуске сервлета.
@@ -31,7 +33,7 @@ public class AddMovieServlet extends HttpServlet {
     public void init() {
         directorService = DirectorService.getDirectorService();
         movieService = MovieService.getMovieService();
-//        directorMovieDAO = new DirectorMovieDAO(DatabaseConnection.getConnection());
+        directorMovieService = DirectorMovieService.getDirectorMovieService();
     }
 
     /**
@@ -70,8 +72,16 @@ public class AddMovieServlet extends HttpServlet {
         movie.setTitle(title);
         movie.setDirectorId(director.getId());
 
-        movieService.add(movie);
+        int movieId = movieService.add(movie).getId();
 
+
+        if (movieId != 0) {
+            DirectorMovie directorMovie = new DirectorMovie();
+            directorMovie.setMovieId(movie.getId());
+            directorMovie.setDirectorId(director.getId());
+
+            directorMovieService.add(directorMovie);
+        }
 
         response.sendRedirect("movie-added.jsp");
     }

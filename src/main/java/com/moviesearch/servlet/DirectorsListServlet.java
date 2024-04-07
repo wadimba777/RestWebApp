@@ -1,6 +1,7 @@
 package com.moviesearch.servlet;
 
 import com.moviesearch.model.Director;
+import com.moviesearch.service.DirectorMovieService;
 import com.moviesearch.service.DirectorService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,10 +19,12 @@ import java.util.List;
 @WebServlet(name = "DirectorsListServlet", urlPatterns = "/directors")
 public class DirectorsListServlet extends HttpServlet {
     private transient DirectorService directorService;
+    private transient DirectorMovieService directorMovieService;
 
     @Override
     public void init() {
         directorService = DirectorService.getDirectorService();
+        directorMovieService = DirectorMovieService.getDirectorMovieService();
     }
 
     /**
@@ -29,7 +32,7 @@ public class DirectorsListServlet extends HttpServlet {
      *
      * @param request  объект HttpServletRequest
      * @param response объект HttpServletResponse
-     * @throws IOException      если произошла ошибка ввода-вывода
+     * @throws IOException если произошла ошибка ввода-вывода
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,15 +54,11 @@ public class DirectorsListServlet extends HttpServlet {
      * @param response объект HttpServletResponse
      */
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String directorIdToDelete = request.getParameter("id");
         if (directorIdToDelete != null) {
-            try {
-                directorService.delete(Integer.parseInt(directorIdToDelete));
-                response.sendRedirect("directors");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            directorService.delete(Integer.parseInt(directorIdToDelete));
         }
+        response.sendRedirect("directors");
     }
 }
